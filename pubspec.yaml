@@ -1,0 +1,29 @@
+name: eansearch
+description: >-
+  EAN, GTIN, UPC and ISBN barcode lookup and validation using the product
+  database API on ean-search.org.
+version: 1.0.0
+homepage: https://www.ean-search.org
+repository: https://github.com/eansearch/dart-ean-search
+issue_tracker: https://github.com/eansearch/dart-ean-search/issues
+documentation: https://www.ean-search.org/ean-database-api.html
+topics:
+  - barcode
+  - ean
+  - gtin
+  - isbn
+  - upc
+
+environment:
+  sdk: ^3.3.0
+
+platforms:
+  linux:
+  macos:
+  windows:
+  android:
+  ios:
+
+dev_dependencies:
+  lints: ^6.0.0
+  test: ^1.25.0
