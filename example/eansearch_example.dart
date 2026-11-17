@@ -5,6 +5,11 @@ import 'package:eansearch/eansearch.dart';
 Future<void> main() async {
   // get a token from https://www.ean-search.org/ean-database-api.html
   final token = Platform.environment['EAN_SEARCH_API_TOKEN'] ?? '';
+  if (token.isEmpty) {
+    stderr.writeln('Please set EAN_SEARCH_API_TOKEN to your API token');
+    exitCode = 1;
+    return;
+  }
   final eansearch = EANSearch(token);
 
   try {
@@ -29,7 +34,8 @@ Future<void> main() async {
     final ok = await eansearch.verifyChecksum(ean);
     print('$ean is ${ok ? 'OK' : 'not OK'}');
 
-    // search for product name "iPod", first page of the results, English only
+    // search for product name "iPod", first page of the results,
+    // preferably English names
     final result = await eansearch.productSearch('iPod');
     for (final p in result.products) {
       print('${p.ean} is ${p.name}');
@@ -45,13 +51,13 @@ Future<void> main() async {
       print('${p.ean} is ${p.name}');
     }
 
-    for (final p in (await eansearch.categorySearch(45, 'thriller')).products) {
+    final thrillers = await eansearch.categorySearch(45, 'thriller');
+    for (final p in thrillers.products) {
       print('${p.ean} is ${p.name}');
     }
 
-    for (final p in (await eansearch.barcodePrefixSearch(
-      '4007249146',
-    )).products) {
+    final prefixed = await eansearch.barcodePrefixSearch('4007249146');
+    for (final p in prefixed.products) {
       print('${p.ean} is ${p.name}');
     }
 
@@ -70,6 +76,7 @@ Future<void> main() async {
 
     print('$ean was issued in ${await eansearch.issuingCountryLookup(ean)}');
 
+    // save a PNG image of the barcode in the current directory
     final png = await eansearch.barcodeImage(ean, width: 300, height: 200);
     await File('barcode.png').writeAsBytes(png);
 
